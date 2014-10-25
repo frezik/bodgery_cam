@@ -12,6 +12,7 @@ use constant INPUT_PIN            => 17;
 use constant PICTURE_INTERVAL_SEC => 2 * 60;
 use constant IMG_WIDTH            => 800;
 use constant IMG_HEIGHT           => 600;
+use constant IMG_QUALITY          => 6;
 use constant DEFAULT_PIC          => '/home/tmurray/proj/bodgery_cam/bodgery_default.jpg';
 use constant PRIVATE_KEY_FILE     => '/home/tmurray/proj/bodgery_cam/upload_key.rsa';
 use constant SERVER_USERNAME      => 'bodgery_upload';
@@ -29,6 +30,7 @@ $rpi->set_as_input( INPUT_PIN );
 
 $rpi->img_set_width( 0, IMG_WIDTH );
 $rpi->img_set_height( 0, IMG_HEIGHT );
+$rpi->img_set_quality( 0, IMG_QUALITY );
 
 
 my $daemon = Proc::Daemon->new(
