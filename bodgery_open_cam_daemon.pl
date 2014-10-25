@@ -5,17 +5,21 @@ use Device::WebIO;
 use Device::WebIO::RaspberryPi;
 use AnyEvent;
 use File::Temp 'tempfile';
+use Proc::Daemon;
 
-use constant DEBUG                => 1;
+use constant DEBUG                => 0;
 use constant INPUT_PIN            => 17;
-use constant PICTURE_INTERVAL_SEC => 0.1 * 60;
+use constant PICTURE_INTERVAL_SEC => 2 * 60;
 use constant IMG_WIDTH            => 800;
 use constant IMG_HEIGHT           => 600;
-use constant DEFAULT_PIC          => 'bodgery_default.jpg';
+use constant DEFAULT_PIC          => '/home/tmurray/proj/bodgery_cam/bodgery_default.jpg';
 use constant PRIVATE_KEY_FILE     => '/home/tmurray/proj/bodgery_cam/upload_key.rsa';
 use constant SERVER_USERNAME      => 'bodgery_upload';
 use constant SERVER_HOST          => '198.74.61.175';
 use constant SERVER_UPLOAD_PATH   => '/var/local/www/vhosts/thebodgery/webcam_feed/feed.jpg';
+use constant DAEMON_WORKDIR       => '/home/tmurray/proj/bodgery_cam/';
+use constant DAEMON_UID           => 0;
+#use constant DAEMON_LOG           => '/home/tmurray/proj/bodgery_cam/bodgery_cam.log';
 
 my ($INPUT, $LAST_INPUT) = (0, 0);
 
@@ -25,6 +29,19 @@ $rpi->set_as_input( INPUT_PIN );
 
 $rpi->img_set_width( 0, IMG_WIDTH );
 $rpi->img_set_height( 0, IMG_HEIGHT );
+
+
+my $daemon = Proc::Daemon->new(
+    workdir      => DAEMON_WORKDIR,
+#    setuid       => DEAMON_UID,
+#    child_STDOUT => DAEMON_LOG,
+#    child_STDERR => DAEMON_LOG,
+);
+my $pid = $daemon->Init;
+if( $pid ) {
+    say "Forked daemon in process $pid, exiting . . . \n" if DEBUG;
+    exit 0;
+}
 
 
 my $condvar = AnyEvent->condvar;
