@@ -7,20 +7,21 @@ use AnyEvent;
 use File::Temp 'tempfile';
 use Proc::Daemon;
 
-use constant DEBUG                => 0;
+use constant DEBUG                => 1;
 use constant INPUT_PIN            => 17;
-use constant PICTURE_INTERVAL_SEC => 2 * 60;
+use constant PICTURE_INTERVAL_SEC => 10; #2 * 60;
 use constant IMG_WIDTH            => 800;
 use constant IMG_HEIGHT           => 600;
 use constant IMG_QUALITY          => 6;
-use constant DEFAULT_PIC          => '/home/tmurray/proj/bodgery_cam/bodgery_default.jpg';
-use constant PRIVATE_KEY_FILE     => '/home/tmurray/proj/bodgery_cam/upload_key.rsa';
+use constant DEFAULT_PIC          => '/home/pi/proj/bodgery_cam/bodgery_default.jpg';
+use constant PRIVATE_KEY_FILE     => '/home/pi/proj/bodgery_cam/upload_key.rsa';
 use constant SERVER_USERNAME      => 'bodgery_upload';
 use constant SERVER_HOST          => '198.74.61.175';
 use constant SERVER_UPLOAD_PATH   => '/var/local/www/vhosts/thebodgery/webcam_feed/feed.jpg';
-use constant DAEMON_WORKDIR       => '/home/tmurray/proj/bodgery_cam/';
+use constant DAEMON_WORKDIR       => '/home/pi/proj/bodgery_cam/';
 use constant DAEMON_UID           => 0;
-#use constant DAEMON_LOG           => '/home/tmurray/proj/bodgery_cam/bodgery_cam.log';
+#use constant DAEMON_LOG           => '/home/pi/proj/bodgery_cam/bodgery_cam.log';
+use constant TMP_DIR              => '/var/tmp-ramdisk';
 
 my ($INPUT, $LAST_INPUT) = (0, 0);
 
@@ -39,11 +40,11 @@ my $daemon = Proc::Daemon->new(
 #    child_STDOUT => DAEMON_LOG,
 #    child_STDERR => DAEMON_LOG,
 );
-my $pid = $daemon->Init;
-if( $pid ) {
-    say "Forked daemon in process $pid, exiting . . . \n" if DEBUG;
-    exit 0;
-}
+#my $pid = $daemon->Init;
+#if( $pid ) {
+#    say "Forked daemon in process $pid, exiting . . . \n" if DEBUG;
+#    exit 0;
+#}
 
 
 my $condvar = AnyEvent->condvar;
@@ -64,7 +65,7 @@ my $take_picture_timer; $take_picture_timer = AnyEvent->timer(
             say "Sending live image" if DEBUG;
             my $fh = $rpi->img_stream( 0, 'image/jpeg' );
 
-            my ($tmp_fh, $tmp_filename) = tempfile;
+            my ($tmp_fh, $tmp_filename) = tempfile( DIR => TMP_DIR );
             while( read( $fh, my $in, 4096 ) ) {
                 print $tmp_fh $in;
             }
