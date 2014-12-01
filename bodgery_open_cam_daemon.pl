@@ -8,9 +8,9 @@ use File::Temp 'tempfile';
 use Proc::Daemon;
 use Imager;
 
-use constant DEBUG                => 1;
+use constant DEBUG                => 0;
 use constant INPUT_PIN            => 17;
-use constant PICTURE_INTERVAL_SEC => 10; #2 * 60;
+use constant PICTURE_INTERVAL_SEC => 1 * 60;
 use constant IMG_WIDTH            => 800;
 use constant IMG_HEIGHT           => 600;
 use constant IMG_QUALITY          => 100;
