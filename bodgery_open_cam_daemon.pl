@@ -17,14 +17,14 @@ use constant IMG_QUALITY          => 100;
 use constant IMG_IMAGER_QUALITY   => 70;
 use constant DEFAULT_PIC          => 'bodgery_default.jpg';
 use constant PRIVATE_KEY_FILE     => 'upload_key.rsa';
-use constant SERVER_USERNAME      => 'bodgery_upload';
+use constant SERVER_USERNAME      => '';
 use constant SERVER_HOST          => ''; # Fill in hostname or IP
 use constant SERVER_UPLOAD_PATH   => ''; # Fill in upload path on server
 use constant DAEMON_WORKDIR       => '/path/to/workdir';
 use constant DAEMON_UID           => 0;
 #use constant DAEMON_LOG           => '/path/to/log';
 use constant TMP_DIR              => '/var/tmp-ramdisk';
-use constant FLIP_IMAGE           => 1;
+use constant FLIP_IMAGE           => 1; # Set if your camera is upside-down
 
 my ($INPUT, $LAST_INPUT) = (0, 0);
 

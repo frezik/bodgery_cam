@@ -1,0 +1,25 @@
+Script for taking a picture from the Raspberry Pi camera when a switch is 
+active and then uploading it to a server.  Handy for a makerspace web cam.
+
+Start by creating an SSH key with:
+
+    ssh-keygen -t rsa -b 2048 -f upload_key.rsa
+
+Don't set a passphrase on this key.
+
+Create a user on your server and give it write access to the specific path on 
+the webserver for the feed picture.  Add the key above to this user's 
+~/.ssh/authorized_keys file.  In this file, you can limit what the key is 
+allowed to do by setting some comma-delimited options before the key:
+
+    no-port-forwarding,no-pty ssh-rsa AAAA...
+
+Fill in the relevant configuration constants in the script for SERVER_USERNAME, 
+SERVER_HOST, and SERVER_UPLOAD_PATH.  You'll also want to set FLIP_IMAGE to 1 if 
+your camera module is mounted upside-down, and 0 otherwise.
+
+Finally, set the script to run on your Pi by adding it to /etc/rc.local:
+
+    /path/to/bodgery_open_cam_daemon.pl &
+
+This will let it run every time your Pi reboots.
